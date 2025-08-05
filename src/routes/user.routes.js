@@ -2,16 +2,18 @@ const express = require('express');
 const router = express.Router();
 const {
     obtenerUser,
-    obtenerUserHuella,
-    getAllUsers,
     createUser,
-    deleteUser
+    getAllUsers,
+    obtenerUserHuella,
+    deleteUser,
+    updateUser
 } = require('../controllers/user.controller')
 
-router.get('/api/users/id=:id', obtenerUser);
-router.post('/api/users/huella=:huellaId', createUser);
-router.get('/api/users/', getAllUsers)
-router.get('/api/users/huella=:huellaId',obtenerUserHuella)
-router.delete('/api/users/huella=:huellaId', deleteUser)
+router.get('/id=:userId', obtenerUser);
+router.post('/huella=:huellaId', createUser);
+router.get('/', getAllUsers)
+router.get('/huella=:huellaId',obtenerUserHuella)
+router.delete('/id=:userId', deleteUser)
+router.put('/id=:userId', updateUser)
 
 module.exports= router;

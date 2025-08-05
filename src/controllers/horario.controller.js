@@ -65,5 +65,5 @@ const deleteHorario = async (req, res) => {
 
 module.exports = {
   createHorario,
-  deleteHorario,
+  deleteHorario
 };

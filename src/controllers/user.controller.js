@@ -16,9 +16,9 @@ const obtenerUser = async (req, res) => {
 }
 const obtenerUserHuella = async (req, res) => {
     try{
-        const {userId} = req.params;
+        const {huellaId} = req.params;
 
-        const userExiste = await User.findOne({where:{id: userId}})
+        const userExiste = await User.findOne({where:{huellaId: huellaId}})
         if(!userExiste){
             return res.status(404).json({messagge: "No se encontro usuario."})
         } 
@@ -36,18 +36,18 @@ const obtenerUserHuella = async (req, res) => {
 }
 const createUser = async(req, res) => {
     try{
-        const {userId} = req.params
+        const {huellaId} = req.params
         const {nombre} = req.body;
 
         if(!nombre) return res.status(400).json({messagge:"Se necesita el nombre."});
-        if(!userId) return res.status(400).json({messagge:"Se requiere el id."});
+        if(!huellaId) return res.status(400).json({messagge:"Se requiere el id."});
 
-        const userExiste = await User.findOne({where:{id: userId}})
+        const userExiste = await User.findOne({where:{huellaId: huellaId}})
         if(userExiste){
             return res.status(400).json({messagge: "Ya existe un usuario con ese id"})
         } 
         
-        const newUser = await User.create({id: userId, nombre: nombre})
+        const newUser = await User.create({huellaId: huellaId, nombre: nombre})
         return res.status(201).json(newUser);
     }catch(error){
         return res.status(500).json({messagge: error.messagge});
@@ -83,7 +83,6 @@ const updateUser = async (req, res) => {
         const {userId} = req.params;
         const {nombre, huellaId} = req.body;
 
-
         const userExiste = await User.findOne({where:{id: userId}})
         if(!userExiste){
             return res.status(404).json({messagge: "No hay usuario con ese id"})
@@ -101,5 +100,6 @@ module.exports = {
     createUser,
     getAllUsers,
     obtenerUserHuella,
-    deleteUser
+    deleteUser,
+    updateUser
 }
