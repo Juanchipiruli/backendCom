@@ -2,31 +2,31 @@ const { Horario } = require("../models");
 
 const createHorario = async (req, res) => {
   try {
-    const { materia_id, aula_id, dia, hora_inicio, hora_fin } = req.body;
+    const { materiaId, aulaId, dia, horaInicio, horaFin } = req.body;
 
-    if (!materia_id)
+    if (!materiaId)
       return res
         .status(400)
         .json({ messagge: "Se necesita el id de la materia." });
-    if (!aula_id)
+    if (!aulaId)
       return res
         .status(400)
         .json({ messagge: "Se requiere el id de la aula." });
     if (!dia) return res.status(400).json({ messagge: "Se requiere el dia." });
-    if (!hora_inicio)
+    if (!horaInicio)
       return res
         .status(400)
         .json({ messagge: "Se requiere la hora de inicio." });
-    if (!hora_fin)
+    if (!horaFin)
       return res.status(400).json({ messagge: "Se requiere la hora de fin." });
 
     const horarioExiste = await Horario.findOne({
       where: {
-        materia_id: materia_id,
-        aula_id: aula_id,
+        materiaId: materiaId,
+        aulaId: aulaId,
         dia: dia,
-        hora_inicio: hora_inicio,
-        hora_fin: hora_fin,
+        horaInicio: horaInicio,
+        horaFin: horaFin,
       },
     });
     if (horarioExiste) {
@@ -36,11 +36,11 @@ const createHorario = async (req, res) => {
     }
 
     const newHorario = await Horario.create({
-      materia_id: materia_id,
-      aula_id: aula_id,
+      materiaId: materiaId,
+      aulaId: aulaId,
       dia: dia,
-      hora_inicio: hora_inicio,
-      hora_fin: hora_fin,
+      horaInicio: horaInicio,
+      horaFin: horaFin,
     });
     return res.status(201).json(newHorario);
   } catch (error) {

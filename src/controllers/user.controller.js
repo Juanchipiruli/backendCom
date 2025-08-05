@@ -34,6 +34,17 @@ const obtenerUserHuella = async (req, res) => {
         return res.status(500).json({messagge: error.messagge});
     }
 }
+
+const validateProfe = async (req, res) => {
+    try{
+        const {sensorId} = req.params;
+        const {huellaId} = req.body;
+
+    }catch(error){
+        return res.status(500).json({messagge: error.messagge});
+    }
+}
+
 const createUser = async(req, res) => {
     try{
         const {huellaId} = req.params

@@ -2,24 +2,20 @@ const { Aula } = require("../models");
 
 const createAula = async (req, res) => {
   try {
-    const { nombre, sensor_id } = req.body;
-
-    if (!nombre)
-      return res
-        .status(400)
-        .json({ messagge: "Se necesita el nombre de la aula." });
-    if (!sensor_id)
-      return res
-        .status(400)
-        .json({ messagge: "Se requiere el id del sensor." });
-
+    const { nombre, sensorId } = req.body;
+    console.log("MAICO GAY")
+    if (!nombre) return res.status(400).json({ messagge: "Se necesita el nombre de la aula." });
+    if (!sensorId) return res.status(400).json({ messagge: "Se requiere el id del sensor." });
+    console.log("MAICO GAY 2")
     const aulaExiste = await Aula.findOne({ where: { nombre: nombre } });
-    if (aulaExiste) {
-      return res
-        .status(400)
-        .json({ messagge: "Ya existe un aula con ese nombre" });
-    }
-    const newAula = await Aula.create({ nombre: nombre, sensor_id: sensor_id });
+    
+    if (aulaExiste) return res.status(400).json({ messagge: "Ya existe un aula con ese nombre" });
+    console.log("MAICO GAY 3")
+
+    const cuerpo = { nombre: nombre, sensorId: sensorId }
+
+    const newAula = await Aula.create(cuerpo, {returning: true});
+    console.log("MAICO GAY 4")
     return res.status(201).json(newAula);
   } catch (error) {
     return res.status(500).json({ messagge: error.messagge });
