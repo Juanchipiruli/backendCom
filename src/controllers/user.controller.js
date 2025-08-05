@@ -1,4 +1,4 @@
-const {User} = require('../models');
+const {User, Aula} = require('../models');
 const { getIO } = require('../socket');
 
 const obtenerUser = async (req, res) => {
@@ -39,6 +39,16 @@ const validateProfe = async (req, res) => {
     try{
         const {sensorId} = req.params;
         const {huellaId} = req.body;
+
+        const aulaExiste = await Aula.findOne({where: {sensorId: sensorId}});
+        const profeExiste = await User.findOne({where: {huellaId: huellaId}});
+
+        if(!aulaExiste) return res.status(400).json({messagge: "No existe el aula"});
+        if(!profeExiste) return res.status(400).json({messagge: "No existe profe"});
+
+        const now = new Date();
+        const diaSemana = now.getDay();
+        const horaActual = now.toTimeString().slice(0, 5);
 
     }catch(error){
         return res.status(500).json({messagge: error.messagge});
