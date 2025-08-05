@@ -7,10 +7,6 @@ const Aula = sequelize.define('Aula', {
         primaryKey: true,
         autoIncrement: true
     },
-    materiaId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
     nombre: {
         type: DataTypes.STRING,
         allowNull: false

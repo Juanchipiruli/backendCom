@@ -3,9 +3,9 @@ const Aula = require('./aula');
 const Horario = require('./horario');
 const Materia = require('./materia');
 const Catedra = require('./catedra');
-//MATERIA-AULA
-Materia.hasMany(Aula, {foreignKey: 'materiaId'});
-Aula.belongsTo(Materia, {foreignKey: 'materiaId'});
+//HORARIO-AULA
+Aula.hasMany(Horario, {foreignKey: 'aulaId'});
+Horario.belongsTo(Aula, {foreignKey: 'aulaId'});
 //MATERIA-USER
 Materia.hasMany(User, {foreignKey: 'materiaId'});
 User.belongsTo(Materia, {foreignKey: 'materiaId'});
@@ -20,5 +20,6 @@ module.exports = {
     User,
     Aula,
     Horario,
-    Materia
+    Materia,
+    Catedra
 }

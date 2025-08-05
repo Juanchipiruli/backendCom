@@ -11,6 +11,10 @@ const Horario = sequelize.define('Horario', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    aulaId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
     dia: {
         type: DataTypes.INTEGER,
         allowNull: false

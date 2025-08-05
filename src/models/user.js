@@ -7,10 +7,6 @@ const User = sequelize.define('User',{
         primaryKey: true,
         autoIncrement: true
     },
-    materiaId: {
-        type: DataTypes.INTEGER,
-        allowNull:false
-    },
     huellaId:{
         type: DataTypes.INTEGER,
         unique: true
