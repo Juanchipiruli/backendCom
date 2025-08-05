@@ -17,7 +17,6 @@ const createMateria = async (req, res) =>{
     }
 }
 
-
 module.exports = {
     createMateria
 }
