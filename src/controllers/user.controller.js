@@ -50,6 +50,19 @@ const validateProfe = async (req, res) => {
         const diaSemana = now.getDay();
         const horaActual = now.toTimeString().slice(0, 5);
 
+        const horarioCoincidente = await Horario.findOne({
+            where: {
+                aulaId: aulaExiste.id,
+                dia: diaSemana,
+                horaInicio: { [Op.lte]: horaActual },
+                horaFin: { [Op.gte]: horaActual }
+            }
+        });
+        
+        if(!horarioCoincidente) {
+            return res.status(404).json({messagge: "No hay horario programado para esta aula en este momento"});
+        }
+
     }catch(error){
         return res.status(500).json({messagge: error.messagge});
     }
