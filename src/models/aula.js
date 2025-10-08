@@ -14,6 +14,21 @@ const Aula = sequelize.define('Aula', {
     sensorId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+    },
+    puertaAbierta: {
+        type:DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+    cerraduraAbierta: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+    ultimaMateriaId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: null
     }
 },{
     tableName: 'aulas'

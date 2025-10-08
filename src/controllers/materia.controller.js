@@ -1,5 +1,17 @@
 const {Materia} = require('../models');
 
+const getMaterias = async (req, res) =>{
+    try{
+        const allMaterias = await Materia.findAll();
+
+        if(allMaterias.length === 0) return res.status(200).json({message: "No hay materias"});
+
+        return res.status(200).json(allMaterias);
+    }catch(error){
+        return res.status(500).json({message: error.message})
+    }
+}
+
 const createMateria = async (req, res) =>{
     try{
         const {nombre, carrera} = req.body;
@@ -63,6 +75,7 @@ const deleteMateria = async (req, res) => {
 }
 
 module.exports = {
+    getMaterias,
     createMateria,
     updateMateria,
     deleteMateria

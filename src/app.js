@@ -5,6 +5,7 @@ const routes = require('./routes/index.routes');
 require('dotenv').config();
 const http = require('http');
 const socket = require('./socket'); // Importamos el módulo
+const espSocket = require('./espSocket');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/', routes);
 const server = http.createServer(app);
 const io = socket.init(server);
+const wss = espSocket.init(server);
 
 io.on('connection', (socket) => {
     console.log('Cliente conectado via WebSocket');

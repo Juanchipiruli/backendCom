@@ -1,4 +1,16 @@
-const { Horario } = require("../models");
+const { Horario, Materia, Aula } = require("../models");
+
+const getHorarios = async (req, res) => {
+  try{
+    const allHorarios = await Horario.findAll({include: [{model: Materia, as: 'Materia'}, {model: Aula, as: 'Aula'}]});
+
+    if(allHorarios.length === 0) return res.status(200).json({message: "No hay horarios"});
+
+    return res.status(200).json(allHorarios);
+  }catch(error){
+    return res.status(500).json({message: error.message})
+  }
+}
 
 const createHorario = async (req, res) => {
   try {
@@ -27,7 +39,7 @@ const createHorario = async (req, res) => {
         dia: dia,
         horaInicio: horaInicio,
         horaFin: horaFin,
-      },
+      }
     });
     if (horarioExiste) {
       return res
@@ -64,6 +76,7 @@ const deleteHorario = async (req, res) => {
 };
 
 module.exports = {
+  getHorarios,
   createHorario,
   deleteHorario
 };

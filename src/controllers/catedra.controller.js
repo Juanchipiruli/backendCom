@@ -1,4 +1,22 @@
-const {Catedra} = require('../models');
+const {Catedra, Materia, User} = require('../models');
+
+const getCatedras = async (req, res) => {
+    try{
+    
+    const allCatedras = await Catedra.findAll({
+        include: [
+            { model: Materia, as: 'Materia'},
+            { model: User, as: 'User'}
+        ]
+        });
+
+    if(allCatedras.length === 0) return res.status(200).json({message: "No existen catedras"});
+
+    return res.status(200).json(allCatedras);
+    }catch(error){
+        return res.status(500).json({message: error.message})
+    }
+}
 
 const createCatedra = async (req, res) => {
     try{
@@ -34,6 +52,7 @@ const deleteCatedra = async (req, res) => {
     }
 }
 module.exports = {
+    getCatedras,
     createCatedra,
     deleteCatedra
 }

@@ -3,11 +3,15 @@ const router = express.Router();
 const {
     createMateria,
     updateMateria,
-    deleteMateria
+    deleteMateria,
+    getMaterias
 } = require('../controllers/materia.controller');
+const {verifyToken} = require('../middleware/auth.middleware');
 
-router.post('/', createMateria);
-router.put('/id=:matId', updateMateria);
-router.delete('/id=matId', deleteMateria);
+router.get('/', verifyToken, getMaterias);
+
+router.post('/', verifyToken, createMateria);
+router.put('/id=:matId', verifyToken, updateMateria);
+router.delete('/id=matId', verifyToken, deleteMateria);
 
 module.exports= router;
