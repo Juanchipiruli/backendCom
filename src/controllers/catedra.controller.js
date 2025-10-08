@@ -5,8 +5,8 @@ const getCatedras = async (req, res) => {
     
     const allCatedras = await Catedra.findAll({
         include: [
-            { model: Materia, as: 'Materia'},
-            { model: User, as: 'User'}
+            { model: Materia },
+            { model: User }
         ]
         });
 
@@ -31,7 +31,12 @@ const createCatedra = async (req, res) => {
 
         const newCatedra = await Catedra.create(cuerpo, {returning: true});
 
-        return res.status(201).json(newCatedra);
+        const catedraCompleto = await Catedra.findOne({	
+            where: {materiaId: newCatedra.materiaId, userId: newCatedra.userId},
+            include: [{model: Materia}, {model: User}]
+        })
+
+        return res.status(201).json(catedraCompleto);
     }catch(error){
         return res.status(500).json({message: error.message})
     }
