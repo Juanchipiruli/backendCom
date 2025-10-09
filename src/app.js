@@ -6,6 +6,7 @@ require('dotenv').config();
 const http = require('http');
 const socket = require('./socket'); // Importamos el módulo
 const espSocket = require('./espSocket');
+const { getESP } = require('./espSocket');
 
 const app = express();
 
@@ -21,6 +22,20 @@ const io = socket.init(server);
 
 io.on('connection', (socket) => {
     console.log('Cliente conectado via WebSocket');
+
+    socket.on('enroll_request', ({ sensorId }) => {
+        try {
+          const esp = getESP(sensorId);
+          if (esp && esp.readyState === 1) { // 1 = OPEN
+            esp.send('ENROLL');
+            io.emit('esp_log', { sensorId, message: `📤 Comando ENROLL enviado al ESP ${sensorId}` });
+          } else {
+            io.emit('esp_log', { sensorId, message: '❌ ESP no conectado o no registrado.' });
+          }
+        } catch (error) {
+          io.emit('esp_log', { sensorId, message: `⚠️ Error al enviar comando: ${error.message}` });
+        }
+      });
   
     socket.on('disconnect', () => {
       console.log('Cliente desconectado');
@@ -28,7 +43,7 @@ io.on('connection', (socket) => {
   });
 
 const espServer = http.createServer();
-espSocket.init(espServer);
+espSocket.init(espServer, io);
 espServer.listen(8081, () => {
     console.log('Servidor WebSocket para ESP escuchando en puerto 8081');
     });

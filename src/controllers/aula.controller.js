@@ -103,7 +103,7 @@ const deleteAula = async (req, res) => {
     await Aula.destroy({ where: { id: aulaId } });
     return res
       .status(200)
-      .json({ messagge: "Se elimino el aula con id: " + aulaId });
+      .json({ messagge: "Se elimino el aula con id: " + aulaId , id: aulaId});
   } catch (error) {
     return res.status(500).json({ messagge: error.messagge });
   }

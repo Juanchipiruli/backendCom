@@ -103,7 +103,7 @@ const deleteHorario = async (req, res) => {
       return res.status(404).json({ messagge: "No hay horario con ese id" });
     }
     await Horario.destroy({ where: { id: horarioId } });
-    return res.status(200).json({ messagge: "Se elimino el horario con id: " + horarioId });
+    return res.status(200).json({ messagge: "Se elimino el horario con id: " + horarioId, id: horarioId });
   } catch (error) {
     return res.status(500).json({ messagge: error.messagge });
   }
