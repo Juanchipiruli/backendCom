@@ -18,7 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/', routes);
 const server = http.createServer(app);
 const io = socket.init(server);
-const wss = espSocket.init(server);
 
 io.on('connection', (socket) => {
     console.log('Cliente conectado via WebSocket');
@@ -27,6 +26,12 @@ io.on('connection', (socket) => {
       console.log('Cliente desconectado');
     });
   });
+
+const espServer = http.createServer();
+espSocket.init(espServer);
+espServer.listen(8081, () => {
+    console.log('Servidor WebSocket para ESP escuchando en puerto 8081');
+    });
   
 
 // Middleware de manejo de errores

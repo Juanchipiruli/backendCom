@@ -44,7 +44,7 @@ const updateMateria = async (req, res) =>{
 
         if(!materiaExiste) return  res.status(404).json({message: "No se encontro la materia"})
 
-        if(!nombre && !carrera) return res.status(400).json({message: "Es nescesario un nombre o una carrera"});
+        if(!nombre && !carrera) return res.status(400).json({message: "No se proporcionaron datos suficientes"});
 
         let cuerpo
         if(nombre && nombre != "") cuerpo.nombre = nombre;

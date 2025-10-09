@@ -5,7 +5,8 @@ const {
     deleteAula,
     closeDoor,
     doorState, 
-    getAulas
+    getAulas,
+    editAula
 } = require('../controllers/aula.controller');
 const {verifyToken} = require('../middleware/auth.middleware');
 
@@ -15,5 +16,6 @@ router.get('/', verifyToken, getAulas)
 
 router.patch('/close=:sensorId', closeDoor);
 router.post('/update=:sensorId', doorState);
+router.put('/id=:aulaId', verifyToken, editAula)
 
 module.exports = router;

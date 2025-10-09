@@ -1,12 +1,43 @@
-const { Aula, User, Catedra } = require("../models");
+const { Aula, User, Catedra, Materia } = require("../models");
 const { getIO } = require('../socket');
 
 const getAulas = async (req, res) => {
   try{
     const allAulas = await Aula.findAll();
-    if(allAulas.length === 0) return res.status(200).json({message: "No hay aulas :V"});
+    if(allAulas.length === 0) return res.status(200).json({message: "No hay aulas"});
+    const allMaterias = await Materia.findAll();
+    let allAulasMats = [];
+    if(allMaterias.length > 0){
+      allAulasMats = allAulas.map(aula =>{
+        if(aula.ultimaMateriaId){
+          const aulaMateria = allMaterias.find(mat => mat.id = aula.ultimaMateriaId);
+          if(aulaMateria){
+            return {
+              id: aula.id,
+              nombre: aula.nombre,
+              sensorId: aula.sensorId,
+              puertaAbierta: aula.puertaAbierta,
+              cerraduraAbierta: aula.cerraduraAbierta,
+              ultimaMateriaId: aula.ultimaMateriaId,
+              ultimaMateriaNombre: aulaMateria.nombre || null
+            }
+          }
+        }else{
+          return {
+            id: aula.id,
+            nombre: aula.nombre,
+            sensorId: aula.sensorId,
+            puertaAbierta: aula.puertaAbierta,
+            cerraduraAbierta: aula.cerraduraAbierta,
+            ultimaMateriaId: null,
+            ultimaMateriaNombre: null
+          }
+        }
+      })
+    }
+    const aulasFinal = allAulasMats.filter(a => a !== undefined);
 
-    return res.status(200).json(allAulas);
+    return res.status(200).json(aulasFinal);
   }catch(error){
     return res.status(500).json({ messagge: error.messagge });
   }
@@ -29,6 +60,37 @@ const createAula = async (req, res) => {
     return res.status(500).json({ messagge: error.messagge });
   }
 };
+
+const editAula = async (req, res) => {
+  try{
+    const {aulaId} = req.params;
+    const {nombre, sensorId} = req.body;
+    const aulaExiste = await Aula.findByPk(aulaId);
+    
+    if(!aulaExiste) return res.status(404).json({message: "Aula no encontrada"})
+    
+    if((!nombre && !sensorId) || (nombre === "" && sensorId === "")) return res.status(400).json({message: "No se proporcionaron datos suficientes"})
+    
+    const editData = {}
+    
+    if(nombre) editData.nombre = nombre;
+    if(sensorId) editData.sensorId = sensorId;
+
+    await aulaExiste.update(editData);
+
+    const aulaUpdated = await Aula.findByPk(aulaId);
+
+    if(aulaUpdated.ultimaMateriaId){
+      const aulaMat = await Materia.findByPk(aulaUpdated.ultimaMateriaId);
+      if(aulaMat) aulaUpdated.ultimaMateriaNombre = aulaMat.nombre
+    }
+    
+    return res.status(200).json(aulaUpdated)
+
+  }catch(error){
+    return res.status(500).json({ messagge: error.messagge })
+  }
+}
 
 const deleteAula = async (req, res) => {
   try {
@@ -56,12 +118,12 @@ const closeDoor= async (req, res) => {
 
       if(!aulaExiste) return res.status(404).json({message: `Aula no existe`});
 
-      if(aulaExiste.lastAulaId){
+      if(aulaExiste.ultimaMateriaId){
         const profeExiste = await User.findOne({where: {huellaId: ShuellaId}});
 
         if(!profeExiste) return res.status(404).json({message: "Profesor no existe"})
 
-        const catedraExiste = await Catedra.findOne({where: {materiaId: aulaExiste.lastAulaId, userId: profeExiste.id}})
+        const catedraExiste = await Catedra.findOne({where: {materiaId: aulaExiste.ultimaMateriaId, userId: profeExiste.id}})
 
         if(!catedraExiste) return res.status(404).json({message: "El profesor no dicta la materia adecuada"});
       }
@@ -72,7 +134,7 @@ const closeDoor= async (req, res) => {
           nombreAula: aulaExiste.nombre,
           cerraduraAbierta: false
       })
-      await aulaExiste.update({cerraduraAbierta: false, lastAulaId: null});
+      await aulaExiste.update({cerraduraAbierta: false, ultimaMateriaId: null});
       return res.status(200).json({message: `Aula ${aulaExiste.nombre} Cerradura cerrada`})
   }catch(error){
     console.log(error);
@@ -92,7 +154,7 @@ const doorState = async (req, res)=>{
       io.emit('aula_door', {
           aula:aulaExiste.id,
           nombreAula: aulaExiste.nombre,
-          puertaAbierta: doorState
+          puertaAbierta: doorState === "abierta" 
       })
       await aulaExiste.update({puertaAbierta: doorState});
       return res.status(200).json({messagge: `Aula ${aulaExiste.nombre} con estado: ${doorState}`})
@@ -106,5 +168,6 @@ module.exports = {
   createAula,
   deleteAula,
   closeDoor,
-  doorState
+  doorState,
+  editAula
 };

@@ -42,6 +42,34 @@ const createCatedra = async (req, res) => {
     }
 }
 
+const editCatedra = async (req, res) => {
+    try{
+        const {materiaId, userId} = req.body;
+
+        const catedraExiste = await Catedra.findByPk(catedraId);
+
+        if(!catedraExiste) return res.status(404).json({message: "No existe esa catedra"});
+
+        if((!materiaId && !userId) || (materiaId === "" && userId === "")) return res.status(400).json({message: "No se proporcionaron datos suficientes"})
+        
+        const editData = {}
+        if(materiaId) editData.materiaId = materiaId;
+        if(userId) editData.userId = userId;
+
+        await catedraExiste.update(editData);
+
+        const catedraUpdated = await Catedra.findByPk(catedraId, {include: [
+            { model: Materia },
+            { model: User }
+        ]
+        })
+
+        return res.status(200).json(catedraUpdated);
+    }catch{
+        return res.status(500).json({message: error.message})
+    }
+}
+
 const deleteCatedra = async (req, res) => {
     try{
         const {catId} = req.params;
@@ -59,5 +87,6 @@ const deleteCatedra = async (req, res) => {
 module.exports = {
     getCatedras,
     createCatedra,
-    deleteCatedra
+    deleteCatedra,
+    editCatedra
 }

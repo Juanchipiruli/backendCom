@@ -84,6 +84,8 @@ const updateUser = async (req, res) => {
         const {userId} = req.params;
         const {nombre, huellaId} = req.body;
 
+        if((!nombre && !huellaId) || (nombre==="" && huellaId==="")) return res.status(400).json({messagge: "No se proporcionaron datos suficientes"})
+
         const userExiste = await User.findOne({where:{id: userId}})
         if(!userExiste){
             return res.status(404).json({messagge: "No hay usuario con ese id"})

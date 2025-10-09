@@ -47,7 +47,7 @@ const validateProfe = async (req, res) => {
                 cerradurAbierta: true
             });
 
-            await Aula.update({cerraduraAbierta: true, lastAulaId: aulaExiste.id}, {where: {id: aulaExiste.id}});
+            await Aula.update({cerraduraAbierta: true, ultimaMateria: materiaExiste.id}, {where: {id: aulaExiste.id}});
             const updatedAula = await Aula.findByPk(aulaExiste.id)
             return res.status(200).json({messagge: "Profe valido", valido: true, aula:updatedAula});
         }else if(!catedraExiste){

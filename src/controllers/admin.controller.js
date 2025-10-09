@@ -51,8 +51,13 @@ const pedirEstado = (client, comando, campo) => {
       try {
         const data = JSON.parse(msg);
 
-        if (data[campo]) {
-          resolve(data[campo] === 'abierta'); 
+        if (data[campo] !== undefined) {
+          const valor = String(data[campo]).trim().toLowerCase();
+
+          // "abierta" → true, "cerrada" → false
+          if (valor === 'abierta') resolve(true);
+          else if (valor === 'cerrada') resolve(false);
+          else reject('Valor desconocido en respuesta del ESP');
         } else {
           reject('Respuesta inválida');
         }
@@ -91,7 +96,7 @@ const abrirCerradura = async (req, res) => {
         getIO().emit('cerradura_estado', { abierta: true });
         await Aula.update({cerraduraAbierta: true}, {where: {id: aulaId}})
     
-        return res.json({ message: 'Cerradura abierta' });
+        return res.json({ message: 'Cerradura abierta', cerraduraAbierta: true });
       }else{
         return res.status(400).json({message: "La cerradura ya esta abierta"});
       }
@@ -128,7 +133,7 @@ const abrirCerradura = async (req, res) => {
         getIO().emit('cerradura_estado', { abierta: false });
     
         await Aula.update({cerraduraAbierta: false}, {where: {id: aulaId}})
-        return res.json({ message: 'Cerradura cerrada' });
+        return res.json({ message: 'Cerradura cerrada', cerraduraAbierta : false });
       }else{
         return res.status(400).json({message: "La puerta ya esta cerrada"});
       }

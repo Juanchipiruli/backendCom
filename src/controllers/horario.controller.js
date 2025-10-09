@@ -65,6 +65,35 @@ const createHorario = async (req, res) => {
   }
 };
 
+const updateHorario = async (req, res) => {
+  try{
+    const {horarioId} = req.params;
+    const { materiaId, aulaId, dia, horaInicio, horaFin } = req.body;
+
+    const horarioExiste = await Horario.findByPk(horarioId);
+
+    if(!horarioExiste) return res.status(404).json({message: "El horario no existe"});
+
+    if((!materiaId && !aulaId && !dia && !horaInicio && !horaFin) || (materiaId==="" && aulaId==="" && dia==="" && horaInicio==="" && horaFin==="")) return res.status(400).json({message: "No se proporcionaron datos suficientes"});
+
+    let editData = {};
+
+    if(materiaId && materiaId != "") editData.materiaId = materiaId;
+    if(aulaId && aulaId != "") editData.aulaId = aulaId;
+    if(dia && dia != "") editData.dia = dia;
+    if(horaInicio && horaInicio != "") editData.horaInicio = horaInicio;
+    if(horaFin && horaFin != "") editData.horaFin = horaFin;
+
+    await horarioExiste.update(editData);
+
+    const updatedHorario = await Horario.findByPk(horarioId, {include: [{model: Materia }, {model: Aula }]});
+
+    return res.status(200).json(updatedHorario);
+  }catch(error){
+    return res.status(500).json({ messagge: error.messagge });
+  }
+}
+
 const deleteHorario = async (req, res) => {
   try {
     const { horarioId } = req.params;
@@ -83,5 +112,6 @@ const deleteHorario = async (req, res) => {
 module.exports = {
   getHorarios,
   createHorario,
-  deleteHorario
+  deleteHorario,
+  updateHorario
 };
