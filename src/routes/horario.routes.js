@@ -12,6 +12,6 @@ router.get('/', verifyToken, getHorarios);
 
 router.post('/', verifyToken, createHorario);
 router.delete('/id=:horarioId', verifyToken, deleteHorario);
-router.put('/id=horarioId', verifyToken, updateHorario);
+router.put('/id=:horarioId', verifyToken, updateHorario);
 
 module.exports = router;

@@ -37,8 +37,13 @@ const createMateria = async (req, res) =>{
 
 const updateMateria = async (req, res) =>{
     try{
+        console.log("HOLA");
         const {matId} = req.params;
         const {nombre, carrera} = req.body;
+
+        console.log(matId);
+        console.log(nombre);
+        console.log(carrera);
 
         const materiaExiste = await Materia.findByPk(matId);
 
@@ -46,9 +51,14 @@ const updateMateria = async (req, res) =>{
 
         if(!nombre && !carrera) return res.status(400).json({message: "No se proporcionaron datos suficientes"});
 
-        let cuerpo
+        console.log("HOLA X2")
+
+        const cuerpo = {}
         if(nombre && nombre != "") cuerpo.nombre = nombre;
+        console.log("paso nombre");
         if(carrera && carrera != "") cuerpo.carrera = carrera;
+
+        console.log(cuerpo);
         
         await materiaExiste.update(cuerpo);
         const updatedMateria = await Materia.findByPk(matId);

@@ -12,6 +12,6 @@ router.get('/', verifyToken, getMaterias);
 
 router.post('/', verifyToken, createMateria);
 router.put('/id=:matId', verifyToken, updateMateria);
-router.delete('/id=matId', verifyToken, deleteMateria);
+router.delete('/id=:matId', verifyToken, deleteMateria);
 
 module.exports= router;
