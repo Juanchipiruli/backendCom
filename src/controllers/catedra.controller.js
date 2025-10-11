@@ -44,17 +44,17 @@ const createCatedra = async (req, res) => {
 
 const editCatedra = async (req, res) => {
     try{
-        const {materiaId, userId} = req.body;
+        const {materiaId, userId, newMateriaId, newUserId} = req.body;
 
-        const catedraExiste = await Catedra.findByPk(catedraId);
+        const catedraExiste = await Catedra.findOne({where: {materiaId: materiaId, userId: userId}});
 
         if(!catedraExiste) return res.status(404).json({message: "No existe esa catedra"});
 
-        if((!materiaId && !userId) || (materiaId === "" && userId === "")) return res.status(400).json({message: "No se proporcionaron datos suficientes"})
+        if((!newMateriaId && !newUserId) || (newMateriaId === "" && newUserId === "")) return res.status(400).json({message: "No se proporcionaron datos suficientes"})
         
         const editData = {}
-        if(materiaId) editData.materiaId = materiaId;
-        if(userId) editData.userId = userId;
+        if(newMateriaId) editData.materiaId = newMateriaId;
+        if(newUserId) editData.userId = newUserId;
 
         await catedraExiste.update(editData);
 
@@ -72,9 +72,9 @@ const editCatedra = async (req, res) => {
 
 const deleteCatedra = async (req, res) => {
     try{
-        const {catId} = req.params;
+        const {materiaId, userId} = req.body;
 
-        const catedraExiste = await Catedra.findByPk(catId);
+        const catedraExiste = await Catedra.findOne({where: {materiaId: materiaId, userId: userId}});
         if(!catedraExiste) return res.status(404).json({message: "No existe la catedra"});
 
         await catedraExiste.destroy();
