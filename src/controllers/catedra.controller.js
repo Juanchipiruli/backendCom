@@ -47,17 +47,18 @@ const createCatedra = async (req, res) => {
 
 const editCatedra = async (req, res) => {
   try {
-    console.log(req.body);
     const { materiaId, userId, newMateriaId, newUserId } = req.body;
 
     const catedraExiste = await Catedra.findOne({
       where: { materiaId: materiaId, userId: userId },
     });
 
-    console.log(catedraExiste);
-
     if (!catedraExiste)
       return res.status(404).json({ message: "No existe esa catedra" });
+
+    const newCatExiste = await Catedra.findOne({where: {materiaId: newMateriaId, userId: newUserId}});
+
+    if(newCatExiste) return res.status(400).json({message: "Ya existe una catedra igual"});
 
     if (
       (!newMateriaId && !newUserId) ||
