@@ -51,14 +51,9 @@ const updateMateria = async (req, res) =>{
 
         if(!nombre && !carrera) return res.status(400).json({message: "No se proporcionaron datos suficientes"});
 
-        console.log("HOLA X2")
-
         const cuerpo = {}
         if(nombre && nombre != "") cuerpo.nombre = nombre;
-        console.log("paso nombre");
         if(carrera && carrera != "") cuerpo.carrera = carrera;
-
-        console.log(cuerpo);
         
         await materiaExiste.update(cuerpo);
         const updatedMateria = await Materia.findByPk(matId);

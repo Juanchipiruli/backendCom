@@ -74,6 +74,10 @@ const updateHorario = async (req, res) => {
 
     if(!horarioExiste) return res.status(404).json({message: "El horario no existe"});
 
+    const horarioYaExiste = await Horario.findOne({where: {materiaId: materiaId, aulaId: aulaId, dia: dia, horaInicio: horaInicio, horaFin: horaFin}});
+
+    if(horarioYaExiste) return res.status(400).json({message: "Ya existe un horario con esos datos"});
+
     if((!materiaId && !aulaId && !dia && !horaInicio && !horaFin) || (materiaId==="" && aulaId==="" && dia==="" && horaInicio==="" && horaFin==="")) return res.status(400).json({message: "No se proporcionaron datos suficientes"});
 
     let editData = {};

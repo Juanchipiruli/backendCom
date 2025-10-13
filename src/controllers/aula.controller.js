@@ -71,6 +71,10 @@ const editAula = async (req, res) => {
     
     if((!nombre && !sensorId) || (nombre === "" && sensorId === "")) return res.status(400).json({message: "No se proporcionaron datos suficientes"})
     
+    const aulaYaExiste = await Aula.findOne({where: {nombre: nombre, sensorId: sensorId}});
+
+    if(aulaYaExiste) return res.status(400).json({message: "Ya existe un aula con esos datos"});
+
     const editData = {}
     
     if(nombre) editData.nombre = nombre;

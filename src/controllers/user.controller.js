@@ -89,8 +89,14 @@ const updateUser = async (req, res) => {
         const userExiste = await User.findOne({where:{id: userId}})
         if(!userExiste){
             return res.status(404).json({messagge: "No hay usuario con ese id"})
-        } 
-        await User.update({nombre: nombre, huellaId: huellaId}, {where:{id: userId}});
+        }
+
+        let editData = {};
+
+        if(nombre && nombre != "") editData.nombre = nombre;
+        if(huellaId && huellaId != "")  editData.huellaId = huellaId;
+
+        await User.update(editData, {where:{id: userId}});
         return res.status(200).json({messagge: "Se actualizo el usuario:", id: userId, nombre: nombre, huellaId: huellaId});
 
     }catch(error){
