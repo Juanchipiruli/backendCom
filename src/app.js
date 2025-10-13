@@ -42,9 +42,9 @@ io.on('connection', (socket) => {
     });
   });
 
-const espServer = http.createServer();
-espSocket.init(espServer, io);
-espServer.listen(8081, () => {
+  const espServer = http.createServer();
+  espSocket.init(espServer, io);
+  espServer.listen(8081, () => {
     console.log('Servidor WebSocket para ESP escuchando en puerto 8081');
     });
   

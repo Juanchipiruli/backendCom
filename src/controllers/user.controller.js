@@ -91,6 +91,10 @@ const updateUser = async (req, res) => {
             return res.status(404).json({messagge: "No hay usuario con ese id"})
         }
 
+        const userYaExiste = await  User.findOne({where: {nombre: nombre, huellaId: huellaId}});
+
+        if(userYaExiste) return res.status(400).json({messagge: "Ya existe un profesor igual"});
+
         let editData = {};
 
         if(nombre && nombre != "") editData.nombre = nombre;

@@ -159,7 +159,7 @@ const abrirCerradura = async (req, res) => {
       }
       const state = await pedirEstado(client, 'STATUS', 'estado');
 
-      return res.status(200).json({abierta: state})
+      return res.status(200).json({abierta: state === 'abierta'})
   
     } catch (error) {
       return res.status(500).json({ message: error.message });
