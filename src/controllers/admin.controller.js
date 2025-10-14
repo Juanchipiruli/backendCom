@@ -96,7 +96,7 @@ const abrirCerradura = async (req, res) => {
         getIO().emit('cerradura_estado', { abierta: true });
         await Aula.update({cerraduraAbierta: true}, {where: {id: aulaId}})
     
-        return res.json({ message: 'Cerradura abierta', cerraduraAbierta: true });
+        return res.json({ message: 'Cerradura abierta', cerraduraAbierta: true, aula: aulaExiste.id });
       }else{
         return res.status(400).json({message: "La cerradura ya esta abierta"});
       }
@@ -116,7 +116,7 @@ const abrirCerradura = async (req, res) => {
       const sensorId = aulaExiste.sensorId;
   
       const client = getESP(sensorId);
-
+      
       if (!client || client.readyState !== 1) {
         return res.status(500).json({ message: 'ESP no conectado' });
       }
@@ -133,7 +133,7 @@ const abrirCerradura = async (req, res) => {
         getIO().emit('cerradura_estado', { abierta: false });
     
         await Aula.update({cerraduraAbierta: false}, {where: {id: aulaId}})
-        return res.json({ message: 'Cerradura cerrada', cerraduraAbierta : false });
+        return res.json({ message: 'Cerradura cerrada', cerraduraAbierta : false , aula: aulaExiste.id});
       }else{
         return res.status(400).json({message: "La puerta ya esta cerrada"});
       }

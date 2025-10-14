@@ -53,6 +53,17 @@ module.exports = {
             });
           }
 
+          else if (data.action === "LOCK_STATE"){
+            const id = ws.sensorId || 'desconocido';
+            console.log(data.lockStateAbierto);
+            if(id != 'desconocido'){
+              io.emit("lock_state", {
+                sensorId: id,
+                lockStateAbierto: data.lockStateAbierto === "abierta"
+              })
+            }
+          }
+
         } catch (e) {
           console.error('Error procesando mensaje del ESP:', e);
         }

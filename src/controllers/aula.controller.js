@@ -160,12 +160,14 @@ const doorState = async (req, res)=>{
           nombreAula: aulaExiste.nombre,
           puertaAbierta: doorState === "abierta" 
       })
-      await aulaExiste.update({puertaAbierta: doorState});
+      await aulaExiste.update({puertaAbierta: doorState === "abierta" });
       return res.status(200).json({messagge: `Aula ${aulaExiste.nombre} con estado: ${doorState}`})
   }catch(error){
       return res.status(500).json({messagge: error.messagge});
   }
 }
+
+
 
 module.exports = {
   getAulas,
