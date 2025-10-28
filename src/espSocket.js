@@ -1,5 +1,6 @@
 // espSocket.js
 const WebSocket = require('ws');
+const {Aula} = require('./models')
 
 let wss;
 // Mapa de sensorId -> WebSocket client
@@ -61,6 +62,7 @@ module.exports = {
                 sensorId: id,
                 lockStateAbierto: data.lockStateAbierto === "abierta"
               })
+              Aula.update({cerraduraAbierta: data.lockStateAbierto === "abierta"}, {where: {sensorId: id}});
             }
           }
 

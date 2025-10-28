@@ -92,10 +92,7 @@ const abrirCerradura = async (req, res) => {
         }
         client.send('OPEN');
   
-        // Notificar al frontend
-        getIO().emit('cerradura_estado', { abierta: true });
-        await Aula.update({cerraduraAbierta: true}, {where: {id: aulaId}})
-    
+        await Aula.update({cerraduraAbierta: true, ultimaMateriaId: null}, {where: {id: aulaId}})
         return res.json({ message: 'Cerradura abierta', cerraduraAbierta: true, aula: aulaExiste.id });
       }else{
         return res.status(400).json({message: "La cerradura ya esta abierta"});
@@ -128,11 +125,9 @@ const abrirCerradura = async (req, res) => {
         if(doorState){
           return res.status(400).json({message: "La puerta esta abierta"})
         }
-        client.send('CLOSE')
-  
-        getIO().emit('cerradura_estado', { abierta: false });
+        client.send('CLOSE');
     
-        await Aula.update({cerraduraAbierta: false}, {where: {id: aulaId}})
+        await Aula.update({cerraduraAbierta: false, ultimaMateriaId: null}, {where: {id: aulaId}})
         return res.json({ message: 'Cerradura cerrada', cerraduraAbierta : false , aula: aulaExiste.id});
       }else{
         return res.status(400).json({message: "La puerta ya esta cerrada"});

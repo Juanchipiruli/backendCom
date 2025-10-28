@@ -135,7 +135,6 @@ const closeDoor= async (req, res) => {
       const io = getIO();
       io.emit('aula_cerrar',{
           aula:aulaExiste.id,
-          nombreAula: aulaExiste.nombre,
           cerraduraAbierta: false
       })
       await aulaExiste.update({cerraduraAbierta: false, ultimaMateriaId: null});
@@ -166,8 +165,6 @@ const doorState = async (req, res)=>{
       return res.status(500).json({messagge: error.messagge});
   }
 }
-
-
 
 module.exports = {
   getAulas,

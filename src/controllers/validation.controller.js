@@ -41,13 +41,11 @@ const validateProfe = async (req, res) => {
         if(catedraExiste){
             io.emit('aula_abrir', {
                 aula: aulaExiste.id,
-                nombreAula: aulaExiste.nombre,
-                nombre: profeExiste.nombre,
-                valido: true,
+                ultimaMateriaNombre: materiaExiste.nombre,
                 cerradurAbierta: true
             });
 
-            await Aula.update({cerraduraAbierta: true, ultimaMateria: materiaExiste.id}, {where: {id: aulaExiste.id}});
+            await Aula.update({cerraduraAbierta: true, ultimaMateriaId: materiaExiste.id}, {where: {id: aulaExiste.id}});
             const updatedAula = await Aula.findByPk(aulaExiste.id)
             return res.status(200).json({messagge: "Profe valido", valido: true, aula:updatedAula});
         }else if(!catedraExiste){
