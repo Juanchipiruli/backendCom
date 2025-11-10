@@ -32,6 +32,12 @@ const createHorario = async (req, res) => {
     if (!horaFin)
       return res.status(400).json({ messagge: "Se requiere la hora de fin." });
 
+    const materiaExiste = await Materia.findByPk(materiaId);
+    const aulaExiste = await Aula.findByPk(aulaId);
+
+    if(!materiaExiste || !aulaExiste){
+      return res.status(404).json({message: "El aula o la materia no existe"});
+    }
     const horarioExiste = await Horario.findOne({
       where: {
         materiaId: materiaId,
@@ -61,7 +67,7 @@ const createHorario = async (req, res) => {
 
     return res.status(201).json(horarioCompleto);
   } catch (error) {
-    return res.status(500).json({ messagge: error.messagge });
+    return res.status(500).json({ messagge: error });
   }
 };
 

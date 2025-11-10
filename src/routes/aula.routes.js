@@ -15,7 +15,7 @@ router.delete('/id=:aulaId',verifyToken, deleteAula);
 router.get('/', verifyToken, getAulas)
 
 router.patch('/close=:sensorId', closeDoor);
-router.post('/update=:sensorId', doorState);
+router.put('/update=:sensorId', doorState);
 router.put('/id=:aulaId', verifyToken, editAula)
 
 module.exports = router;
